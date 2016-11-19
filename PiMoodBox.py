@@ -13,9 +13,9 @@ GPIO.setup(RIGHT, GPIO.IN)
 GPIO.setup(LEFT, GPIO.IN)
 GPIO.setup(LED, GPIO.OUT)
 
-#This is added in case several Rpi´s are used, so that it´s clear which feedback came from which one
+#This is added in case several Rpi's are used, so that it's clear which feedback came from which one
 def setfilename(asctime):
-    FILEROOT = './Mood_Logs/MElog_'
+    FILEROOT = '/home/pi/Mood_Logs/MElog_'
     macline = subprocess.check_output('ifconfig | grep b8:27:eb',shell=True)
     mac = macline[-11:-3]
     temp1 = string.replace(asctime,':','-')
@@ -74,29 +74,29 @@ while True:
 
         logfile.close()
 
-         mycommand = './Dropbox-Uploader/dropbox_uploader.sh'
-         print(mycommand)
-         print(os.getcwd())
-         #-s skips files which already exist
-         input_list = ['sudo', mycommand, '-s' , 'upload', 'Mood_Logs', '/']
-         print(input_list)
+        mycommand = '/home/pi/Dropbox-Uploader/dropbox_uploader.sh'
+        print(mycommand)
+        print(os.getcwd())
+        #-s skips files which already exist
+        input_list = ['sudo', mycommand, '-s' , 'upload', 'Mood_Logs', '/']
+        print(input_list)
 
-         GPIO.output(LED,GPIO.HIGH)
-         subprocess.call(['sudo', 'ifdown', 'wlan0'])
-         subprocess.call(['sudo', 'ifup', 'wlan0'])
-         subprocess.call(input_list)
-         GPIO.output(LED, GPIO.LOW)
+        GPIO.output(LED,GPIO.HIGH)
+        subprocess.call(['sudo', 'ifdown', 'wlan0'])
+        subprocess.call(['sudo', 'ifup', 'wlan0'])
+        subprocess.call(input_list)
+        GPIO.output(LED, GPIO.LOW)
 
-         #Blink so I know that upload is finished
-         for n in range(4):
-             GPIO.output(LED,GPIO.HIGH)
-             time.sleep(DELAY/2)
-             GPIO.output(LED,GPIO.LOW)
-             time.sleep(DELAY/2)
+        #Blink so I know that upload is finished
+        for n in range(4):
+            GPIO.output(LED,GPIO.HIGH)
+            time.sleep(DELAY/2)
+            GPIO.output(LED,GPIO.LOW)
+            time.sleep(DELAY/2)
 
-         logfilename, mac = setfilename(time.asctime())
-         logfile = open(logfilename,'w')
-         logfile.close()
+        logfilename, mac = setfilename(time.asctime())
+        logfile = open(logfilename,'w')
+        logfile.close()
 
 
 
